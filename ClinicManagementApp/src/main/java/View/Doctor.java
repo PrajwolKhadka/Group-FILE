@@ -6,6 +6,7 @@ package View;
 
 import Controller.DoctorController;
 import Controller.PatientController;
+import DAO.DoctorDAO;
 import DAO.PatientDAO;
 import Model.Database;
 import java.awt.event.MouseAdapter;
@@ -18,14 +19,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import DAO.DoctorDAO;
 /**
  *
  * @author Acer
  */
 public class Doctor extends javax.swing.JFrame {
 private DefaultTableModel tableModel;
-private final PatientDAO userdao;
+private final DoctorDAO userdao;
     /**
      * Creates new form Doctor
      */
@@ -37,7 +38,7 @@ private final PatientDAO userdao;
          Connection conn = null;
         try {
             conn = Database.getConnection();
-            this.userdao= new PatientDAO(conn);
+            this.userdao= new DoctorDAO(conn);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error establishing database connection: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException("Unable to establish database connection.", e);

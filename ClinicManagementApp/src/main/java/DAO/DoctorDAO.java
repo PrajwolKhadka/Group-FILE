@@ -17,7 +17,7 @@ import java.sql.SQLException;
  */
 public class DoctorDAO {
      private final Connection conn;
-
+     
     public DoctorDAO(Connection conn) {
         this.conn = conn;
     }

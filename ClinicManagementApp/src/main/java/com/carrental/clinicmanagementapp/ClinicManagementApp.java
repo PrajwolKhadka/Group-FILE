@@ -3,7 +3,7 @@
  */
 
 package com.carrental.clinicmanagementapp;
-
+import View.LoginPage;
 /**
  *
  * @author Acer
@@ -11,6 +11,7 @@ package com.carrental.clinicmanagementapp;
 public class ClinicManagementApp {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        LoginPage log = new LoginPage();
+        log.setVisible(true);
     }
 }

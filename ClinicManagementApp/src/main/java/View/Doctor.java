@@ -4,17 +4,95 @@
  */
 package View;
 
+import Controller.DoctorController;
+import Controller.PatientController;
+import DAO.PatientDAO;
+import Model.Database;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Acer
  */
 public class Doctor extends javax.swing.JFrame {
-
+private DefaultTableModel tableModel;
+private final PatientDAO userdao;
     /**
      * Creates new form Doctor
      */
     public Doctor() {
         initComponents();
+        new DoctorController(this);
+         tableModel = (DefaultTableModel) dTable.getModel();
+        loadTableData();
+         Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            this.userdao= new PatientDAO(conn);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error establishing database connection: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            throw new RuntimeException("Unable to establish database connection.", e);
+        }
+            dTable.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 1) {
+            int row = dTable.rowAtPoint(e.getPoint());
+            if (row >= 0) {
+                populateTextFields(row);
+            }
+        }
+    }
+            });
+    }
+    
+  public String getSelectedRowId() {
+    int selectedRow = dTable.getSelectedRow();
+    if (selectedRow >= 0) {
+        return dTable.getValueAt(selectedRow, 0).toString();
+    }
+    return null;
+}
+
+    
+  private void loadTableData() {
+
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM doctor")) {
+                tableModel.setRowCount(0);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String id = rs.getString("idDoctor");
+                    String name = rs.getString("Name");
+                    String contact = rs.getString("Contact");
+                    String age = rs.getString("Faculty");
+                    String gender = rs.getString("Gender");
+
+                    tableModel.addRow(new Object[]{id, name, contact, age, gender});
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+    }
+  private void populateTextFields(int row) {
+    DefaultTableModel model = (DefaultTableModel) dTable.getModel();
+    Id.setText(model.getValueAt(row, 0).toString());
+    Name.setText(model.getValueAt(row, 1).toString());
+    Contact.setText(model.getValueAt(row, 2).toString());
+    Faculty.setText(model.getValueAt(row, 3).toString());
+    Gender.setSelectedItem(model.getValueAt(row, 4));
     }
 
     /**
@@ -34,7 +112,7 @@ public class Doctor extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         Id = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        Age = new javax.swing.JTextField();
+        Faculty = new javax.swing.JTextField();
         Delete = new javax.swing.JButton();
         Gender = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
@@ -43,7 +121,7 @@ public class Doctor extends javax.swing.JFrame {
         patient = new javax.swing.JLabel();
         appointment = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        DoctorTable = new javax.swing.JTable();
+        dTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -92,7 +170,7 @@ public class Doctor extends javax.swing.JFrame {
             }
         });
 
-        DoctorTable.setModel(new javax.swing.table.DefaultTableModel(
+        dTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -100,7 +178,7 @@ public class Doctor extends javax.swing.JFrame {
                 "Id", "Name", "Contact", "Age", "Gender"
             }
         ));
-        jScrollPane2.setViewportView(DoctorTable);
+        jScrollPane2.setViewportView(dTable);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Acer\\Documents\\Clinic\\ClinicManagementApp\\src\\main\\java\\Resources\\patient.jpg")); // NOI18N
 
@@ -121,7 +199,7 @@ public class Doctor extends javax.swing.JFrame {
                 .addGap(541, 541, 541)
                 .addComponent(Contact, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
-                .addComponent(Age, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(Faculty, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(811, 811, 811)
                 .addComponent(Name, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -171,7 +249,7 @@ public class Doctor extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Age, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(Faculty, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(91, 91, 91)
                 .addComponent(Name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -247,7 +325,40 @@ public class Doctor extends javax.swing.JFrame {
         appointment.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_appointmentMouseClicked
+    public javax.swing.JTextField getFaculty() {
+    return Faculty;
+}
 
+public javax.swing.JTextField getContact() {
+    return Contact;
+}
+
+public javax.swing.JComboBox<String> getGender() {
+    return Gender;
+}
+
+public javax.swing.JTextField getId() {
+    return Id;
+}
+
+public javax.swing.JTextField getDocName() {
+    return Name;
+}
+
+public javax.swing.JTable getDoctorTable() {
+    return dTable;
+}
+public javax.swing.JButton getAddButton() {
+    return Add;
+}
+
+public javax.swing.JButton getDeleteButton() {
+    return Delete;
+}
+
+public javax.swing.JButton getUpdateButton() {
+    return Update;
+}
     /**
      * @param args the command line arguments
      */
@@ -285,15 +396,15 @@ public class Doctor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Add;
-    private javax.swing.JTextField Age;
     private javax.swing.JTextField Contact;
     private javax.swing.JButton Delete;
-    private javax.swing.JTable DoctorTable;
+    private javax.swing.JTextField Faculty;
     private javax.swing.JComboBox<String> Gender;
     private javax.swing.JTextField Id;
     private javax.swing.JTextField Name;
     private javax.swing.JButton Update;
     private javax.swing.JLabel appointment;
+    private javax.swing.JTable dTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

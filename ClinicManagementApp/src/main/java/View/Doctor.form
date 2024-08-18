@@ -68,7 +68,7 @@
                   <EmptySpace min="541" pref="541" max="-2" attributes="0"/>
                   <Component id="Contact" min="-2" pref="220" max="-2" attributes="0"/>
                   <EmptySpace min="50" pref="50" max="-2" attributes="0"/>
-                  <Component id="Age" min="-2" pref="220" max="-2" attributes="0"/>
+                  <Component id="Faculty" min="-2" pref="220" max="-2" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
                   <EmptySpace min="811" pref="811" max="-2" attributes="0"/>
@@ -132,7 +132,7 @@
                   <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="Contact" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="Age" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="Faculty" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <Group type="102" attributes="0">
@@ -237,7 +237,7 @@
             <Property name="text" type="java.lang.String" value="ID"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="Age">
+        <Component class="javax.swing.JTextField" name="Faculty">
         </Component>
         <Component class="javax.swing.JButton" name="Delete">
           <Properties>
@@ -304,7 +304,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="DoctorTable">
+            <Component class="javax.swing.JTable" name="dTable">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="5" rowCount="0">
